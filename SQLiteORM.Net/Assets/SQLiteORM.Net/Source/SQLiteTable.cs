@@ -66,6 +66,14 @@ public class SQLiteTable<T> where T : new()
             {
                 if (property.GetCustomAttributes(typeof(ColumnIgnoreAttribute), false).Length == 0)
                 {
+                    // If the property is marked as required and is null, throw an exception
+                    if (property.GetCustomAttributes(typeof(RequiredAttribute), false).Length != 0 && 
+                        //!property.PropertyType.IsValueType && 
+                        property.GetValue(item) == null)
+                    {
+                        throw new RequiredFieldException(property.Name);
+                    }
+
                     string fieldName = property.Name;
                     var fieldNameAttribute = property.GetCustomAttributes(typeof(FieldNameAttribute), false).FirstOrDefault() as FieldNameAttribute;
                     if (fieldNameAttribute != null)

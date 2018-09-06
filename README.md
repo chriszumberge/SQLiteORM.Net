@@ -1,12 +1,24 @@
 # SQLiteORM.Net
-Code First SQLite ORM written for .NET
+SQLiteORM.Net is a Code First SQLite ORM written for .NET for use in Unity projects.
 
+
+#### Depenencies
+- SQLiteDatabase
+- JsonDotNet
 
 #### Roadmap
-- Logging verbosity
-- Extract Unity dependency from SQLiteORN.Net to a separate package
 - Error events
-- [Required] data attribute
 - Foreign keys and Navigations Properties
 - Migrations
 - Change tracking and SaveChanges()/Rollbacks
+
+### Documentation
+
+#### Creating DbContext
+
+#### Providing Models to Store Data
+
+#### Data Configuration
+
+##### Default Value
+Since the ORM is Code-First, provide a default value just by setting the class property equal to a value.

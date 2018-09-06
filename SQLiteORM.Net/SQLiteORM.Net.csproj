@@ -240,12 +240,14 @@
     <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\FieldNameAttribute.cs" />
     <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\NotNullAttribute.cs" />
     <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\PrimaryKeyAttribute.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\RequiredAttribute.cs" />
     <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\SizeAttribute.cs" />
     <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\TableNameAttribute.cs" />
     <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\UniqueAttribute.cs" />
     <Compile Include="Assets\SQLiteORM.Net\Source\Defaults\DefaultSQLiteConfiguration.cs" />
     <Compile Include="Assets\SQLiteORM.Net\Source\Defaults\UnityConsoleSQLiteLogger.cs" />
     <Compile Include="Assets\SQLiteORM.Net\Source\Exceptions\DatabaseDoesNotExistException.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Source\Exceptions\RequiredFieldException.cs" />
     <Compile Include="Assets\SQLiteORM.Net\Source\Helpers\Extensions.cs" />
     <Compile Include="Assets\SQLiteORM.Net\Source\Helpers\LogHelper.cs" />
     <Compile Include="Assets\SQLiteORM.Net\Source\ISQLiteLogger.cs" />
