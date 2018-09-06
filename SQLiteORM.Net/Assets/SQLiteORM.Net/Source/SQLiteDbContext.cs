@@ -34,16 +34,16 @@ public abstract class SQLiteDbContext : ScriptableObject, IDisposable
 
     void InitializeDatabase()
     {
-        Debug.Log("Initializing Database");
+        LogHelper.Log(LoggingLevel.TRACE, _config, "Initializing Database");
 
         if (_database.Exists)
         {
-            Debug.Log("Database exists, connecting");
+            LogHelper.Log(LoggingLevel.TRACE, _config, "Database exists, connecting");
             ConnectToDatabase();
         }
         else
         {
-            Debug.Log("Database does not exist, creating");
+            LogHelper.Log(LoggingLevel.TRACE, _config, "Database does not exist, creating");
             CreateDatabase();
         }
 
@@ -55,14 +55,14 @@ public abstract class SQLiteDbContext : ScriptableObject, IDisposable
     private void SQLiteEventListener_onError(string err)
     {
         // TODO have it fire an event from this class that user code can handle
-        Debug.LogError(err);
+        LogHelper.Log(LoggingLevel.ERROR, _config, err);
     }
 
     void RunMigrations()
     {
         // TODO if add/drop migrations or incremental
 
-        Debug.Log("Creating and Migrating");
+        LogHelper.Log(LoggingLevel.TRACE, _config, "Creating and Migrating");
 
         foreach (var connectionField in this.GetType().GetFields())
         {
@@ -73,7 +73,7 @@ public abstract class SQLiteDbContext : ScriptableObject, IDisposable
 
                 // get the generic type argument that the SQLiteTable is using, as that's the type of the table
                 Type tableFieldGenericType = tableField.FieldType.GetGenericArguments()[0];
-                Debug.Log(tableFieldGenericType.Name);
+                LogHelper.Log(LoggingLevel.TRACE, _config, String.Concat("Considering object of type: " + tableFieldGenericType.Name));
 
                 // get the name of the field to be the name of the table, unless it has a custom table name attribute, then use that
                 string tableName = tableField.Name;
@@ -84,7 +84,7 @@ public abstract class SQLiteDbContext : ScriptableObject, IDisposable
                     // TODO rip out all symbols and other invalid characters
                     tableName = tableNameAttribute.TableName.Replace(" ", "_");
                 }
-                Debug.Log(tableName);
+                LogHelper.Log(LoggingLevel.TRACE, _config, String.Concat("Mapping object to database table named: " + tableName));
 
                 // Create the schema for the new table to be created
                 DBSchema schema = new DBSchema(tableName);
@@ -160,12 +160,12 @@ public abstract class SQLiteDbContext : ScriptableObject, IDisposable
 
                 if (_database.IsTableExists(schema.TableName))
                 {
-                    Debug.Log("The " + schema.TableName + " table exists.");
+                    LogHelper.Log(LoggingLevel.TRACE, _config, "The " + schema.TableName + " table already exists.");
                     // TODO.. migration update?
                 }
                 else
                 {
-                    Debug.Log("Creating the " + schema.TableName + " table.");
+                    LogHelper.Log(LoggingLevel.TRACE, _config, "Creating the " + schema.TableName + " table.");
                     _database.CreateTable(schema);
                 }
 
@@ -174,7 +174,7 @@ public abstract class SQLiteDbContext : ScriptableObject, IDisposable
                 Type genericClass = typeof(SQLiteTable<>);
                 Type constructedClass = genericClass.MakeGenericType(typeArgument);
 
-                tableField.SetValue(this, Activator.CreateInstance(constructedClass, _database, tableName));
+                tableField.SetValue(this, Activator.CreateInstance(constructedClass, _database, tableName, _config));
             }
         }
 
@@ -184,6 +184,7 @@ public abstract class SQLiteDbContext : ScriptableObject, IDisposable
     #region IDisposable Support
     public void Dispose()
     {
+        LogHelper.Log(LoggingLevel.TRACE, _config, "Disposing Database and Context");
         Database.Dispose();
     }
     #endregion
