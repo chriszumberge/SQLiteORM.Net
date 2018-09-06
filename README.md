@@ -1,2 +1,2 @@
 # SQLiteORM.Net
-SQLite ORM written for .NET
+Code First SQLite ORM written for .NET
