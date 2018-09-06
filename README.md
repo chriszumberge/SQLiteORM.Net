@@ -1,10 +1,21 @@
 # SQLiteORM.Net
 SQLiteORM.Net is a Code First SQLite ORM written for .NET for use in Unity projects.
 
+## Getting Started
+Download the `SQLiteORM.Net.Core.unitypackage` and import it into your project.
 
-#### Depenencies
-- SQLiteDatabase
-- JsonDotNet
+You will also need to download the two dependencies, I unfortunately could not package the SQLite Database
+code since it's a paid asset available on the [Unity Asset Store](https://assetstore.unity.com/packages/tools/integration/sqlite-database-40375).
+
+I chose SQLite because it's extremely lightweight and most importantly it supports iOS, Android, PC and Mac.
+
+JsonDotNet is **free** and also available on the [Unity Asset Store](https://assetstore.unity.com/packages/tools/input-management/json-net-for-unity-11347).
+
+The `SQLiteORM.Net.unitypackage` includes the JsonDotNet binaries.
+
+#### Dependencies
+- [SQLiteDatabase](https://assetstore.unity.com/packages/tools/integration/sqlite-database-40375) - $10
+- [JsonDotNet](https://assetstore.unity.com/packages/tools/input-management/json-net-for-unity-11347) - FREE
 
 #### Roadmap
 - Error events
