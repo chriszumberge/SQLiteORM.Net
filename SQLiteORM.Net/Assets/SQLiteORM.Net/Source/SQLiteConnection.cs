@@ -1,6 +1,9 @@
 ﻿using SQLiteDatabase;
 using System;
+//using System.Diagnostics;
+using UnityEngine;
 using System.Linq;
+using System.Reflection;
 
 /// <summary>
 /// 
@@ -33,38 +36,45 @@ public abstract class SQLiteConnection : IDisposable
 
     void InitializeDatabase()
     {
-        System.Diagnostics.Debug.WriteLine("Initializing Database");
+        Debug.Log("Initializing Database");
 
         if (database.Exists)
         {
-            System.Diagnostics.Debug.WriteLine("Database exists, connecting");
+            Debug.Log("Database exists, connecting");
             ConnectToDatabase();
         }
         else
         {
-            System.Diagnostics.Debug.WriteLine("Database does not exist, creating");
+            Debug.Log("Database does not exist, creating");
             CreateDatabase();
         }
 
+        SQLiteEventListener.onError += SQLiteEventListener_onError;
+
         RunMigrations();
+    }
+
+    private void SQLiteEventListener_onError(string err)
+    {
+        Debug.LogError(err);
     }
 
     void RunMigrations()
     {
         // TODO if add/drop migrations or incremental
 
-        System.Diagnostics.Debug.WriteLine("Creating and Migrating");
+        Debug.Log("Creating and Migrating");
 
         foreach (var connectionField in this.GetType().GetFields())
         {
             if (connectionField.FieldType.Name.Equals("SQLiteTable`1"))
             {
                 // rename variable for explicitness, now that it represents something else
-                var tableField = connectionField;
+                FieldInfo tableField = connectionField;
 
                 // get the generic type argument that the SQLiteTable is using, as that's the type of the table
-                Type tableFieldGenericType = tableField.FieldType.GenericTypeArguments[0];
-                System.Diagnostics.Debug.WriteLine(tableFieldGenericType.Name);
+                Type tableFieldGenericType = tableField.FieldType.GetGenericArguments()[0];
+                Debug.Log(tableFieldGenericType.Name);
 
                 // get the name of the field to be the name of the table, unless it has a custom table name attribute, then use that
                 string tableName = tableField.Name;
@@ -75,7 +85,7 @@ public abstract class SQLiteConnection : IDisposable
                     // TODO rip out all symbols and other invalid characters
                     tableName = tableNameAttribute.TableName.Replace(" ", "_");
                 }
-                System.Diagnostics.Debug.WriteLine(tableName);
+                Debug.Log(tableName);
 
                 // Create the schema for the new table to be created
                 DBSchema schema = new DBSchema(tableName);
@@ -151,12 +161,12 @@ public abstract class SQLiteConnection : IDisposable
 
                 if (database.IsTableExists(schema.TableName))
                 {
-                    System.Diagnostics.Debug.WriteLine("The " + schema.TableName + " table exists.");
+                    Debug.Log("The " + schema.TableName + " table exists.");
                     // TODO.. migration update?
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine("Creating the " + schema.TableName + " table.");
+                    Debug.Log("Creating the " + schema.TableName + " table.");
                     database.CreateTable(schema);
                 }
 
@@ -175,6 +185,8 @@ public abstract class SQLiteConnection : IDisposable
     #region IDisposable Support
     public void Dispose()
     {
+        SQLiteEventListener.onError -= SQLiteEventListener_onError;
+
         database.Dispose();
     }
     #endregion

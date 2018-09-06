@@ -230,6 +230,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\SQLiteDatabase\Example\DatabaseExample.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Example\DataAccess\ExampleSQLiteConfiguration.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Example\DataAccess\ExampleSQLiteConnection.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Example\DataAccess\ExampleSQLiteDbContext.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Example\Models\TestData.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Example\Models\TestNestedData.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Example\Models\TestUser.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Example\UsageExample.cs" />
     <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\ColumnIgnoreAttribute.cs" />
     <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\FieldNameAttribute.cs" />
     <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\NotNullAttribute.cs" />

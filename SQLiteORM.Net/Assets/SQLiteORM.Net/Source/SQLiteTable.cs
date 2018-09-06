@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SQLiteDatabase;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,24 +55,44 @@ public class SQLiteTable<T> where T : new()
     {
         bool successful = false;
 
-        List<SQLiteDB.DB_DataPair> dataPairList = new List<SQLiteDB.DB_DataPair>();
-        SQLiteDB.DB_DataPair data = new SQLiteDB.DB_DataPair();
-
-        foreach (var property in _itemProperties)
+        try
         {
-            if (property.GetCustomAttributes(typeof(ColumnIgnoreAttribute), false).Length == 0)
+            List<SQLiteDB.DB_DataPair> dataPairList = new List<SQLiteDB.DB_DataPair>();
+            SQLiteDB.DB_DataPair data = new SQLiteDB.DB_DataPair();
+
+            foreach (var property in _itemProperties)
             {
-                data.fieldName = property.Name;
-                data.value = ConvertValueToString(item, property);
-                dataPairList.Add(data);
+                if (property.GetCustomAttributes(typeof(ColumnIgnoreAttribute), false).Length == 0)
+                {
+                    string fieldName = property.Name;
+                    var fieldNameAttribute = property.GetCustomAttributes(typeof(FieldNameAttribute), false).FirstOrDefault() as FieldNameAttribute;
+                    if (fieldNameAttribute != null)
+                    {
+                        // cleanse by replacing all spaces with underscores
+                        // TODO rip out all symbols and other invalid characters
+                        fieldName = fieldNameAttribute.FieldName.Replace(" ", "_");
+                    }
+
+                    data.fieldName = fieldName;
+                    data.value = ConvertValueToString(item, property);
+                    dataPairList.Add(data);
+
+                    Debug.Log("Added {" + data.fieldName + ", " + data.value + "}");
+                }
+            }
+
+            int changeCount = _db.Insert(_tableIdentifier, dataPairList);
+
+            Debug.Log(changeCount + " change(s) on insert.");
+
+            if (changeCount > 0)
+            {
+                successful = true;
             }
         }
-
-        int changeCount = _db.Insert(_tableIdentifier, dataPairList);
-
-        if (changeCount > 0)
+        catch (Exception ex)
         {
-            successful = true;
+            Debug.LogError(ex);
         }
 
         return successful;
@@ -167,43 +188,51 @@ public class SQLiteTable<T> where T : new()
 
             foreach (var property in _itemProperties)
             {
-                string propertyName = property.Name;
+                // if the property isn't being ignored
+                if (property.GetCustomAttributes(typeof(ColumnIgnoreAttribute), false).Length == 0)
+                {
+                    string propertyName = property.Name;
 
-                var fieldNameAttribute = property.GetCustomAttributes(typeof(FieldNameAttribute), false).FirstOrDefault() as FieldNameAttribute;
-                if (fieldNameAttribute != null)
-                {
-                    propertyName = fieldNameAttribute.FieldName;
-                }
+                    var fieldNameAttribute = property.GetCustomAttributes(typeof(FieldNameAttribute), false).FirstOrDefault() as FieldNameAttribute;
+                    if (fieldNameAttribute != null)
+                    {
+                        // cleanse by replacing all spaces with underscores
+                        // TODO rip out all symbols and other invalid characters
+                        propertyName = fieldNameAttribute.FieldName.Replace(" ", "_");
+                    }
 
-                if (property.PropertyType.Equals(typeof(double)))
-                {
-                    property.SetValue(item, reader.GetDoubleValue(property.Name));
-                }
-                else if (property.PropertyType.Equals(typeof(float)))
-                {
-                    property.SetValue(item, reader.GetFloatValue(property.Name));
-                }
-                else if (property.PropertyType.Equals(typeof(int)))
-                {
-                    property.SetValue(item, reader.GetIntValue(property.Name));
-                }
-                else if (property.PropertyType.Equals(typeof(long)))
-                {
-                    property.SetValue(item, reader.GetLongValue(property.Name));
-                }
-                else if (property.PropertyType.Equals(typeof(short)))
-                {
-                    property.SetValue(item, reader.GetShortValue(property.Name));
-                }
-                else if (property.PropertyType.Equals(typeof(string)))
-                {
-                    property.SetValue(item, reader.GetStringValue(property.Name));
-                }
-                else
-                {
-                    // was serialized
-                    object deserializedValue = JsonConvert.DeserializeObject(reader.GetStringValue(property.Name), property.PropertyType);
-                    property.SetValue(item, deserializedValue);
+                    Debug.Log("Finding key " + propertyName);
+
+                    if (property.PropertyType.Equals(typeof(double)))
+                    {
+                        property.SetValue(item, reader.GetDoubleValue(propertyName));
+                    }
+                    else if (property.PropertyType.Equals(typeof(float)))
+                    {
+                        property.SetValue(item, reader.GetFloatValue(propertyName));
+                    }
+                    else if (property.PropertyType.Equals(typeof(int)))
+                    {
+                        property.SetValue(item, reader.GetIntValue(propertyName));
+                    }
+                    else if (property.PropertyType.Equals(typeof(long)))
+                    {
+                        property.SetValue(item, reader.GetLongValue(propertyName));
+                    }
+                    else if (property.PropertyType.Equals(typeof(short)))
+                    {
+                        property.SetValue(item, reader.GetShortValue(propertyName));
+                    }
+                    else if (property.PropertyType.Equals(typeof(string)))
+                    {
+                        property.SetValue(item, reader.GetStringValue(propertyName));
+                    }
+                    else
+                    {
+                        // was serialized
+                        object deserializedValue = JsonConvert.DeserializeObject(reader.GetStringValue(propertyName), property.PropertyType);
+                        property.SetValue(item, deserializedValue);
+                    }
                 }
             }
 
