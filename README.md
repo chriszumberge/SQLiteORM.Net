@@ -1,5 +1,5 @@
 # SQLiteORM.Net
-SQLiteORM.Net is a Code First SQLite ORM written for .NET for use in Unity projects.
+SQLiteORM.Net is a Code First SQLite ORM written for .NET for use in Unity projects. It is inspired by and attempting to emulate both the syntaxes and architectures of EntityFramework, but for SQLite.
 
 ## Getting Started
 Download the `SQLiteORM.Net.Core.unitypackage` and import it into your project.
