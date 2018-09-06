@@ -212,43 +212,44 @@
     <Reference Include="UnityEngine.SpatialTracking">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Analytics">
-      <HintPath>C:/Users/chris/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.analytics@1.0.1/UnityEngine.Analytics.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Purchasing">
-      <HintPath>C:/Users/chris/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.purchasing@1.0.1/UnityEngine.Purchasing.dll</HintPath>
-    </Reference>
     <Reference Include="LocalDB">
       <HintPath>Assets/Plugins/LocalDB.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Data.Sqlite">
       <HintPath>Assets/Plugins/Mono.Data.Sqlite.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
-      <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/iOSSupport\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+    <Reference Include="UnityEngine.Analytics">
+      <HintPath>C:/Users/zumberc/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.analytics@1.0.1/UnityEngine.Analytics.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.iOS.Extensions.Common">
-      <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/iOSSupport\UnityEditor.iOS.Extensions.Common.dll</HintPath>
+    <Reference Include="UnityEngine.Purchasing">
+      <HintPath>C:/Users/zumberc/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.purchasing@1.0.1/UnityEngine.Purchasing.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Assets/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\SQLiteDatabase\Example\DatabaseExample.cs" />
-    <Compile Include="Assets\SQLiteORM.Net\Attributes\ColumnIgnoreAttribute.cs" />
-    <Compile Include="Assets\SQLiteORM.Net\Attributes\FieldNameAttribute.cs" />
-    <Compile Include="Assets\SQLiteORM.Net\Attributes\NotNullAttribute.cs" />
-    <Compile Include="Assets\SQLiteORM.Net\Attributes\PrimaryKeyAttribute.cs" />
-    <Compile Include="Assets\SQLiteORM.Net\Attributes\SizeAttribute.cs" />
-    <Compile Include="Assets\SQLiteORM.Net\Attributes\TableNameAttribute.cs" />
-    <Compile Include="Assets\SQLiteORM.Net\Attributes\UniqueAttribute.cs" />
-    <Compile Include="Assets\SQLiteORM.Net\Defaults\DefaultSQLiteConfiguration.cs" />
-    <Compile Include="Assets\SQLiteORM.Net\Exceptions\DatabaseDoesNotExistException.cs" />
-    <Compile Include="Assets\SQLiteORM.Net\SQLiteConfiguration.cs" />
-    <Compile Include="Assets\SQLiteORM.Net\SQLiteConnection.cs" />
-    <Compile Include="Assets\SQLiteORM.Net\SQLiteDbContext.cs" />
-    <Compile Include="Assets\SQLiteORM.Net\SQLiteTable.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\ColumnIgnoreAttribute.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\FieldNameAttribute.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\NotNullAttribute.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\PrimaryKeyAttribute.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\SizeAttribute.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\TableNameAttribute.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Source\Attributes\UniqueAttribute.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Source\Defaults\DefaultSQLiteConfiguration.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Source\Exceptions\DatabaseDoesNotExistException.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Source\Helpers\Extensions.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Source\SQLiteConfiguration.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Source\SQLiteConnection.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Source\SQLiteDbContext.cs" />
+    <Compile Include="Assets\SQLiteORM.Net\Source\SQLiteTable.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Assemblies\Newtonsoft.Json.11.0.2\net45\Newtonsoft.Json.xml" />
+    <None Include="Assets\JsonDotNet\Assemblies\AOT\Newtonsoft.Json.XML" />
+    <None Include="Assets\JsonDotNet\Assemblies\Standalone\Newtonsoft.Json.XML" />
+    <None Include="Assets\JsonDotNet\Assemblies\Windows\Newtonsoft.Json.XML" />
+    <None Include="Assets\JsonDotNet\link.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

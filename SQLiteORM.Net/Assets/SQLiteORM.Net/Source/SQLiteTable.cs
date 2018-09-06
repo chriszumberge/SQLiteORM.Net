@@ -1,4 +1,5 @@
-﻿using SQLiteDatabase;
+﻿using Newtonsoft.Json;
+using SQLiteDatabase;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
