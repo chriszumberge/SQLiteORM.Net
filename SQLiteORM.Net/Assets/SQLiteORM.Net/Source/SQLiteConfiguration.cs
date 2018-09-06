@@ -12,4 +12,6 @@ public abstract class SQLiteConfiguration
     // Set Interceptors
 
     // Set Logs and Log Formatters
+    public abstract ISQLiteLogger SQLiteLogger { get; }
+    public abstract LoggingLevel LoggingLevel { get; }
 }

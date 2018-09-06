@@ -1,29 +1,29 @@
 ﻿using Newtonsoft.Json;
 using SQLiteDatabase;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 public class SQLiteTable<T> where T : new()
 {
     readonly SQLiteDB _db;
     readonly string _tableIdentifier;
+    readonly SQLiteConfiguration _config;
 
     readonly System.Reflection.PropertyInfo[] _itemProperties;
     readonly System.Reflection.PropertyInfo _primaryKeyProperty;
 
-    public SQLiteTable(SQLiteDB db, string tableIdentifier)
+    public SQLiteTable(SQLiteDB db, string tableIdentifier, SQLiteConfiguration config)
     {
         _db = db;
         _tableIdentifier = tableIdentifier;
+        _config = config;
 
         _itemProperties = typeof(T).GetProperties();
 
         foreach (var property in _itemProperties)
         {
-            if (PropertyAttribute.GetCustomAttributes(typeof(PrimaryKeyAttribute), false).Length != 0)
+            if (property.GetCustomAttributes(typeof(PrimaryKeyAttribute), false).Length != 0)
             {
                 _primaryKeyProperty = property;
                 break;
@@ -60,10 +60,20 @@ public class SQLiteTable<T> where T : new()
             List<SQLiteDB.DB_DataPair> dataPairList = new List<SQLiteDB.DB_DataPair>();
             SQLiteDB.DB_DataPair data = new SQLiteDB.DB_DataPair();
 
+            LogHelper.Log(LoggingLevel.TRACE, _config, "Creating new " + typeof(T).Name);
+
             foreach (var property in _itemProperties)
             {
                 if (property.GetCustomAttributes(typeof(ColumnIgnoreAttribute), false).Length == 0)
                 {
+                    // If the property is marked as required and is null, throw an exception
+                    if (property.GetCustomAttributes(typeof(RequiredAttribute), false).Length != 0 && 
+                        //!property.PropertyType.IsValueType && 
+                        property.GetValue(item) == null)
+                    {
+                        throw new RequiredFieldException(property.Name);
+                    }
+
                     string fieldName = property.Name;
                     var fieldNameAttribute = property.GetCustomAttributes(typeof(FieldNameAttribute), false).FirstOrDefault() as FieldNameAttribute;
                     if (fieldNameAttribute != null)
@@ -77,13 +87,13 @@ public class SQLiteTable<T> where T : new()
                     data.value = ConvertValueToString(item, property);
                     dataPairList.Add(data);
 
-                    Debug.Log("Added {" + data.fieldName + ", " + data.value + "}");
+                    LogHelper.Log(LoggingLevel.TRACE, _config, "Added {" + data.fieldName + ", " + data.value + "} to object.");
                 }
             }
 
             int changeCount = _db.Insert(_tableIdentifier, dataPairList);
 
-            Debug.Log(changeCount + " change(s) on insert.");
+            LogHelper.Log(LoggingLevel.LOG, _config, changeCount + " change(s) on insert to " + _tableIdentifier);
 
             if (changeCount > 0)
             {
@@ -92,7 +102,7 @@ public class SQLiteTable<T> where T : new()
         }
         catch (Exception ex)
         {
-            Debug.LogError(ex);
+            LogHelper.Log(LoggingLevel.ERROR, _config, ex.ToString());
         }
 
         return successful;
@@ -201,7 +211,7 @@ public class SQLiteTable<T> where T : new()
                         propertyName = fieldNameAttribute.FieldName.Replace(" ", "_");
                     }
 
-                    Debug.Log("Finding key " + propertyName);
+                    LogHelper.Log(LoggingLevel.TRACE, _config, "Finding key " + propertyName);
 
                     if (property.PropertyType.Equals(typeof(double)))
                     {
